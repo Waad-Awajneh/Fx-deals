@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
-public class exceptionHandler extends ResponseEntityExceptionHandler {
+import java.util.Map;
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<Object> handleMissingField(
-            RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = ex.getMessage();
+@ControllerAdvice
+public class MissingFieldHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(FxDealValidationException.class)
+    protected ResponseEntity<Object> handleMissingField(FxDealValidationException ex, WebRequest request) {
+        Map<String,String> bodyOfResponse = ex.getErrors();
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
